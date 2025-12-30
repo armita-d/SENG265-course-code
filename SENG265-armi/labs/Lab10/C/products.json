@@ -1,0 +1,5 @@
+{"__type__": "Product", "code": 123, "description": "Fernwood Coffee", "price": 14.5}
+{"__type__": "Product", "code": 234, "description": "Olay Soap Bar", "price": 10.0}
+{"__type__": "Product", "code": 345, "description": "Lindt Lindor Chocolate Bar", "price": 4.0}
+{"__type__": "Product", "code": 678, "description": "Trident Peppermint", "price": 1.99}
+{"__type__": "Product", "code": 987, "description": "Rooibos Tea", "price": 9.5}
