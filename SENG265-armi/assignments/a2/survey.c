@@ -1,0 +1,286 @@
+/*
+ * Library includes
+ */
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+/*
+ * Compile-time constants
+ */
+#define MAX_TESTS 6
+#define MAX_QUESTIONS 50
+#define MAX_LIKERT_LEVELS 4
+#define MAX_NUMBER_PHRASES 50
+#define MAX_PHRASE_LENGTH 120
+#define MAX_NUMBER_RESPONSES 50
+#define MAX_LINE_LENGTH 3000
+
+/*
+ * Function prototypes
+ */
+
+/* input handling functions */
+int tokenize_line(char *line, char phrases[][MAX_PHRASE_LENGTH], char delimiter[]);
+int store_tests(char phrases[][MAX_PHRASE_LENGTH], int num_phrases, short tests[]);
+void store_response(char phrases[][MAX_PHRASE_LENGTH], int num_phrases,  
+    short responses[][MAX_QUESTIONS], int num_respondents,
+    char likert_level_descriptions[][MAX_PHRASE_LENGTH], int num_likert_levels);
+short convert_response_to_scale(char *token, 
+    char likert_level_descriptions[][MAX_PHRASE_LENGTH], int num_likert_levels);
+
+/* processing functions */
+void compute_frequencies(double frequencies[][MAX_LIKERT_LEVELS], 
+    int num_questions, int num_likert_levels,
+    short responses[][MAX_QUESTIONS], int num_respondents);
+void compute_averages(double averages[], double frequencies[][MAX_LIKERT_LEVELS], 
+    int num_questions, int num_likert_levels);
+
+/* output functions */
+void print_output(short tests[], int num_tests, 
+    char questions[][MAX_PHRASE_LENGTH], int num_questions,
+    char likert_level_descriptions[][MAX_PHRASE_LENGTH], int num_likert_levels,
+    short responses[][MAX_QUESTIONS], int num_respondents, 
+    double frequencies[][MAX_LIKERT_LEVELS], double averages[]);
+
+/*
+ * Main program and functions
+ */
+
+/* main function: handles input, processes data, prints output */
+int main(int argc, char *argv[])
+{
+    if (argc != 1) {
+            printf("Usage: %s\n", argv[0]);
+            printf("Should receive no parameters\n");
+            printf("Read from the stdin instead\n");
+            exit(1);
+    }
+
+    /* declaration and initialization of local variables */
+
+    int num_phrases = 0;
+    char phrases[MAX_NUMBER_PHRASES][MAX_PHRASE_LENGTH];
+
+    int num_tests = 0;
+    short tests[MAX_TESTS];
+    
+    int num_questions = 0;
+    char questions[MAX_QUESTIONS][MAX_PHRASE_LENGTH];
+    
+    int num_likert_levels = 0;
+    char likert_level_descriptions[MAX_LIKERT_LEVELS][MAX_PHRASE_LENGTH];
+
+    int num_respondents = 0;
+    short responses[MAX_NUMBER_RESPONSES][MAX_QUESTIONS];
+     for (int i=0; i<MAX_NUMBER_RESPONSES; i++) {
+        for (int j=0; j<MAX_QUESTIONS; j++) {
+            responses[i][j] = 0;
+        }
+    }
+
+    double frequencies[MAX_QUESTIONS][MAX_LIKERT_LEVELS];
+    for (int i=0; i<MAX_QUESTIONS; i++) {
+        for (int j=0; j<MAX_LIKERT_LEVELS; j++) {
+            frequencies[i][j] = 0.0;
+        }
+    }
+
+    double averages[MAX_QUESTIONS];
+    for (int i=0; i<MAX_QUESTIONS; i++) {
+        averages[i] = 0.0;
+    }
+
+    char line[MAX_LINE_LENGTH];
+
+    int phase = 0;
+    
+
+    /* Read the input lines and process them */
+    while ( fgets(line, sizeof(char) * MAX_LINE_LENGTH, stdin) ) {
+        if (line[0] == '#') {
+            continue;
+        }
+        switch (phase) {
+        case 0:
+            num_phrases = tokenize_line(line, phrases, ",\n");
+            num_tests = store_tests(phrases, num_phrases, tests);
+            phase++;
+            break;
+        case 1:
+            num_questions = tokenize_line(line, questions, ";\n");
+            phase++;
+            break;
+        case 2:
+            num_likert_levels = tokenize_line(line, likert_level_descriptions, ",\n");
+            phase++;
+            break;
+        case 3:
+            num_phrases = tokenize_line(line, phrases, ",\n");
+            store_response(phrases, num_phrases, responses, num_respondents,
+               likert_level_descriptions, num_likert_levels);
+            num_respondents++;
+            break;
+        }
+    }
+
+    /* survey data processing */
+    compute_frequencies(frequencies, num_questions, num_likert_levels, responses, num_respondents);
+    compute_averages(averages, frequencies, num_questions, num_likert_levels);
+
+    /*compute_average_scores(average_scores, scores, num_respondents);*/
+
+    /* print results */
+    print_output(tests, num_tests, 
+        questions, num_questions, 
+        likert_level_descriptions, num_likert_levels, 
+        responses, num_respondents, 
+        frequencies, averages);
+
+    exit(0);
+}
+
+/* tokenize a line and store it in a string array of phrases */
+int tokenize_line(char *line, char phrases[][MAX_PHRASE_LENGTH], char delimiter[]) {
+
+    int num_phrases = 0;
+    char *token;
+    
+    /* get the first token from line */
+    token = strtok(line, delimiter);
+    
+    /* for every token in line, store it */
+    while (token) {
+        strncpy(phrases[num_phrases], token, MAX_PHRASE_LENGTH);
+        num_phrases++;
+
+        /* get the next token from line or reach end of line */
+        token = strtok(NULL, delimiter);
+    } 
+    return num_phrases;          
+}
+
+/* store test configuration to only run specified tests */
+int store_tests(char phrases[][MAX_PHRASE_LENGTH], int num_phrases, short tests[]) {
+    /* for every phrase in phrases, convert it to a bit and store it  */
+    for (int i = 0; i < num_phrases; i++) {
+        if (phrases[i][0] == '1') {
+            tests[i] = 1;
+        }
+        else {
+            tests[i] = 0;
+        }
+    }
+    return num_phrases;          
+}
+
+/* stores next survey response */
+void store_response(char phrases[][MAX_PHRASE_LENGTH], int num_phrases,  
+    short responses[][MAX_QUESTIONS], int num_respondents,
+    char likert_level_descriptions[][MAX_PHRASE_LENGTH], int num_likert_levels) {
+
+    /* for every phrase in phrases, convert it to a scale and store it as a response
+       indices start from 0 in question_types and responses
+       index starts from 3 in phrases to ignore respondent's information
+     */
+    for (int i = 0; i < num_phrases; i++) {
+        short scale = convert_response_to_scale(phrases[i], 
+                        likert_level_descriptions, num_likert_levels);
+        responses[num_respondents][i] = scale;
+    }
+    return;     
+}
+
+/* convert Likert item to numerical scale */
+short convert_response_to_scale(char *token, 
+    char likert_level_descriptions[][MAX_PHRASE_LENGTH], int num_likert_levels) {
+    
+    short scale = 0;
+    for (int i = 0; i < num_likert_levels; i++) {
+        if (strcmp(token, likert_level_descriptions[i]) == 0) {
+            scale = i+1;
+            break;
+        }
+    }
+    return scale;
+}
+
+/* compute Likert item relative frequencies */
+void compute_frequencies(double frequencies[][MAX_LIKERT_LEVELS], 
+    int num_questions, int num_likert_levels,
+    short responses[][MAX_QUESTIONS], int num_respondents) {
+    for (int i = 0; i < num_questions; i++) {
+        /* compute absolute frequencies first */
+        for (int j = 0; j < num_respondents; j++) {
+            frequencies[i][responses[j][i] - 1]++;
+        }
+        /* compute relative percentual frequencies */
+        for (int k = 0; k < MAX_LIKERT_LEVELS; k++) {
+            if (num_respondents > 0) {
+                frequencies[i][k] = 100.0 * frequencies[i][k] / ((double)num_respondents);
+            }
+            else {
+                frequencies[i][k] = 0;
+            }
+        }
+    }
+    return;
+}
+
+void compute_averages(double averages[], double frequencies[][MAX_LIKERT_LEVELS], 
+    int num_questions, int num_likert_levels) {
+    for (int i = 0; i < num_questions; i++) {
+        int count = 0;
+        for (int j = 0; j < num_likert_levels; j++) {
+            count += frequencies[i][j];
+            averages[i] += (j+1)*frequencies[i][j];
+        }
+        if (count != 0) {
+            averages[i] /= (double)count;
+        }
+            
+    }
+}
+
+
+/* Print outputs to stdout */
+void print_output(short tests[], int num_tests,
+    char questions[][MAX_PHRASE_LENGTH], int num_questions,
+    char likert_level_descriptions[][MAX_PHRASE_LENGTH], int num_likert_levels,
+    short responses[][MAX_QUESTIONS], int num_respondents,
+    double frequencies[][MAX_LIKERT_LEVELS], double averages[]) {
+
+    /* print header */
+    printf("ECS Student Survey\n");
+    printf("SURVEY RESPONSE STATISTICS\n");
+    printf("\nNUMBER OF RESPONDENTS: %d\n", num_respondents);
+
+    /* show relative percentual frequencies */
+    if (tests[0]) {
+        printf("\n#####\n"); 
+        printf("FOR EACH QUESTION/ASSERTION BELOW, RELATIVE PERCENTUAL FREQUENCIES ARE COMPUTED FOR EACH LEVEL OF AGREEMENT\n");
+
+        for (int i = 0; i < num_questions; i++) {
+            printf("\n%d. %s\n", i+1, questions[i]);
+            for (int j = 0; j < num_likert_levels; j++) {
+                printf("%.2f: %s\n", frequencies[i][j], likert_level_descriptions[j]);
+            }
+        }        
+    }
+
+
+    /* show average scores per respondent */
+    if (tests[1]) {
+        printf("\n#####\n"); 
+        printf("FOR EACH QUESTION/ASSERTION BELOW, THE AVERAGE RESPONSE IS SHOWN (FROM 1-DISAGREEMENT TO 4-AGREEMENT)\n");
+        printf("\n");
+        for (int i = 0; i < num_questions; i++) {
+            printf("%d. %s - %.2f\n", i+1, questions[i], averages[i]);
+        }
+    }
+    
+    return;
+}
+
+

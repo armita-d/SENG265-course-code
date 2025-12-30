@@ -1,0 +1,66 @@
+[33mcommit 93ed28214d1c5539e6f6a08ac5328f5f4e28f445[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Armita Darbandi <armitadarbandi@uvic.ca>
+Date:   Fri Oct 3 16:09:54 2025 -0700
+
+    fixed the line error which i couldnt get between questions before
+
+[33mcommit 13d5e0dc0ecf701cd4aadabc7306eadd21718877[m
+Author: Armita Darbandi <armitadarbandi@uvic.ca>
+Date:   Thu Oct 2 09:48:37 2025 -0700
+
+    fixed stage 2 & define max_responses & fixed the typo at (show_freq)
+
+[33mcommit 7418dc721761e2f72de94ec7cddd2aabbe982e9d[m
+Author: Armita Darbandi <armitadarbandi@uvic.ca>
+Date:   Thu Oct 2 09:21:50 2025 -0700
+
+    add sums arry for avg
+
+[33mcommit 8cf99221e83876fec7ca37c298c3fc386281f6dc[m
+Author: Armita Darbandi <armitadarbandi@uvic.ca>
+Date:   Thu Oct 2 09:20:23 2025 -0700
+
+    add func answer_value that converts text answer into numerical value so we can compute avg
+
+[33mcommit 3fcbb9d4a075e96800968e1103e372842f808a87[m
+Author: Armita Darbandi <armitadarbandi@uvic.ca>
+Date:   Thu Oct 2 09:17:00 2025 -0700
+
+    add survey file
+
+[33mcommit 49cddd5cdbe83bcd4676afefb4069c08ad35ce5c[m
+Author: Armita Darbandi <armitadarbandi@uvic.ca>
+Date:   Wed Oct 1 19:18:47 2025 -0700
+
+    add func show_freq & show_avg
+
+[33mcommit fd690dfbfdcb72f0bae0f0a76e6aec4bb75764b8[m
+Author: Armita Darbandi <armitadarbandi@uvic.ca>
+Date:   Wed Oct 1 16:07:54 2025 -0700
+
+    implement frequency statistics
+    count relative frequencies per question and print results in required format
+
+[33mcommit 0905f6feaa00141f8c33795b873dd8f70030c11f[m
+Author: Armita Darbandi <armitadarbandi@uvic.ca>
+Date:   Tue Sep 30 14:44:28 2025 -0700
+
+    initial skeleton: read stdin and print input lines
+
+[33mcommit 94b7227256ff8c2886f08c3ff478378eaaf7a1e9[m[33m ([m[1;31mold-origin/main[m[33m, [m[1;31mold-origin/HEAD[m[33m)[m
+Author: Roberto Bittencourt <rbittencourt@uvic.ca>
+Date:   Tue Sep 23 00:06:15 2025 +0000
+
+    Fixed test_scripts.sh
+
+[33mcommit 503ff10c22eae28e779229760b90e6edc8dd6535[m
+Author: Roberto Bittencourt <rbittencourt@uvic.ca>
+Date:   Thu Sep 18 14:44:20 2025 -0700
+
+    Added starter files
+
+[33mcommit 9bb2124704f1f258139c7ca6bc9edd7dc49ded84[m
+Author: Roberto Bittencourt <rbittencourt@uvic.ca>
+Date:   Thu Sep 18 21:41:57 2025 +0000
+
+    Initial commit

@@ -1,0 +1,184 @@
+/*dyn_survey.c
+*
+*main program for the dynamic survey system.
+*reads survey configuration, questions, answer options, and student responses from stdin.
+* calculate freq, avg and demographic statistics then print the result to stdout.
+* helper funcs:
+*input_handling: reading questions and options
+*processing.h: calculating statistics
+*output.h: print result
+*emalloc.h safe memory allocaton*
+*/
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "dyn_survey.h"
+#include "input_handling.h"
+#include "output.h"
+#include "emalloc.h"
+#include "processing.h"
+/*main:
+entry point of the survey program.
+*reads all input data, dynamically allocates  memory for survey structer,
+*calculation statistics , pint results and free memory.
+* and then it returns: 0 on seccesfull completion.
+*/
+
+int main() {
+    char line[1024];// buffer for reading input lines
+
+//pointers for dynamic arrays
+//* points to a single var  elemnt or the first 
+    char **questions = NULL;
+    char **options = NULL;
+    char **programs = NULL;
+    char **residence_statuses = NULL;
+    Response *responses = NULL;
+    int **freq = NULL;
+    double *averages = NULL;
+    double *program_stats = NULL;
+    double *residence_stats = NULL;
+    
+    int num_questions = 0, num_options = 0, total = 0;
+    int num_programs = 0, num_statuses = 0;
+    int show_freq = 0, show_avg = 0, show_demographics = 0;
+    int step = 0;
+    int num_respondents = 0;
+
+    while (fgets(line, sizeof(line), stdin)) {
+        if (line[0] == '#') continue;
+
+        switch (step) {
+            case 0:
+                sscanf(line, "%d,%d,%d", &show_freq, &show_avg, &show_demographics);
+                step = 1;
+                break;
+            case 1:
+                programs = (char**)emalloc(8 * sizeof(char*));
+                for (int i = 0; i < 8; i++) {
+                    programs[i] = (char*)emalloc(MAX_LEN * sizeof(char*));
+                    programs[i][0]='\0';
+                }
+                read_options(line, programs, &num_programs);
+                step = 2;
+                break;
+            case 2:
+                residence_statuses = (char**)emalloc(3 * sizeof(char));
+                for (int i = 0; i < 3; i++) {
+                    residence_statuses[i] = (char*)emalloc(MAX_LEN * sizeof(char*));
+                    residence_statuses[i][0] ='\0';
+                }
+dyn_survey.c                read_options(line, residence_statuses, &num_statuses);
+                step = 3;
+                break;
+            case 3:
+                if (strchr(line, ';')) {
+                    char temp_line[1024];
+                    strcpy(temp_line, line);
+                    char *token = strtok(temp_line, ";\n");
+                    while (token) {
+                        num_questions++;
+                        token = strtok(NULL, ";\n");
+                    }
+                    
+                    questions = (char **)emalloc(num_questions * sizeof(char *));
+			for (int i = 0; i < num_questions; i++) {
+			    questions[i] = (char *)emalloc(MAX_LEN * sizeof(char));
+			    questions[i][0] = '\0';
+			}
+
+			freq = (int **)emalloc(num_questions * sizeof(int *));
+				for (int i = 0; i < num_questions; i++) {
+				    freq[i] = (int *)emalloc(4 * sizeof(int));
+				    for (int j = 0; j < 4; j++) freq[i][j] = 0;
+				}
+                    
+                    averages = (double*)emalloc(num_questions * sizeof(double));
+                    for(int i= 0; i < num_questions;i++) averages[i] =0.0;
+                    read_questions(line, questions, &num_questions);
+                    step = 4;
+                }
+                break;
+            case 4:
+                if (strchr(line, ',')) {
+                    char temp_line[1024];
+                    strcpy(temp_line, line);
+                    char *token = strtok(temp_line, ",\n");
+                    while (token) {
+                        num_options++;
+                        token = strtok(NULL, ",\n");
+                    }
+                    
+                    options = (char**)emalloc(num_options * sizeof(char*));
+                    for (int i = 0; i < num_options; i++) {
+                        options[i] = (char*)emalloc(MAX_LEN * sizeof(char));
+                        options[i][0] = '\0';
+                    }
+                    
+                    read_options(line, options, &num_options);
+                    step = 5;
+                }
+                break;
+            case 5:
+                sscanf(line, "%d", &num_respondents);
+                responses = (Response*)emalloc(num_respondents * sizeof(Response));
+                for (int i = 0; i < num_respondents; i++) {
+                    responses[i].answers = (int*)emalloc(num_questions * sizeof(int));
+                }
+                program_stats = (double*)emalloc(num_programs * sizeof(double));
+                residence_stats = (double*)emalloc(num_statuses * sizeof(double));
+                step = 6;
+                break;
+            case 6:
+		if (total < num_respondents) {
+    		process_responses(line, responses, total, programs, num_programs, residence_statuses, num_statuses, options, num_options, num_questions);
+		total++;
+		}                
+                break;
+        }
+    }
+
+    
+    calculate_frequencies(freq, responses, total, num_questions, num_options);
+    calculate_averages(averages, freq, total, num_questions, num_options);
+    calculate_demographic_stats(program_stats, residence_stats, responses, total, programs, num_programs, residence_statuses, num_statuses);
+
+    SurveyConfig config = {show_freq, show_avg, show_demographics};
+    print_analysis(config, freq, averages, program_stats, residence_stats, questions, options, programs, residence_statuses, num_questions, num_options, num_programs, num_statuses, total);
+
+    for (int i = 0; i < num_questions; i++) {
+        free(questions[i]);
+    }
+    free(questions);
+    
+    for (int i = 0; i < num_options; i++) {
+        free(options[i]);
+    }
+    free(options);
+    
+    for (int i = 0; i < num_programs; i++) {
+        free(programs[i]);
+    }
+    free(programs);
+    
+    for (int i = 0; i < num_statuses; i++) {
+        free(residence_statuses[i]);
+    }
+    free(residence_statuses);
+    
+    for (int i = 0; i < total; i++) {
+        free(responses[i].answers);
+    }
+    free(responses);
+    
+    for (int i = 0; i < num_questions; i++) {
+        free(freq[i]);
+    }
+    free(freq);
+    
+    free(averages);
+    free(program_stats);
+    free(residence_stats);
+    
+    return 0;
+}

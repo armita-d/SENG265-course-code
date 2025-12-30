@@ -1,0 +1,122 @@
+Assignment 4 – Test Outputs for group076
+============================================================
+Repo path: repos/group076
+
+
+============================================================
+python -m unittest -v ./tests/controller_test.py
+============================================================
+test_create_post (tests.controller_test.ControllerTest) ... ok
+test_create_search_blog (tests.controller_test.ControllerTest) ... ok
+test_delete_blog (tests.controller_test.ControllerTest) ... ok
+test_delete_post (tests.controller_test.ControllerTest) ... ok
+test_list_blogs (tests.controller_test.ControllerTest) ... ok
+test_list_posts (tests.controller_test.ControllerTest) ... ok
+test_login_logout (tests.controller_test.ControllerTest) ... ok
+test_retrieve_blogs (tests.controller_test.ControllerTest) ... ok
+test_retrieve_posts (tests.controller_test.ControllerTest) ... ok
+test_set_get_current_blog (tests.controller_test.ControllerTest) ... ok
+test_update_blog (tests.controller_test.ControllerTest) ... ok
+test_update_post (tests.controller_test.ControllerTest) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.001s
+
+OK
+
+
+============================================================
+python -m unittest -v ./tests/integration_test.py
+============================================================
+test_create_post (tests.integration_test.IntegrationTest) ... ok
+test_create_search_blog (tests.integration_test.IntegrationTest) ... ok
+test_delete_blog (tests.integration_test.IntegrationTest) ... ok
+test_delete_post (tests.integration_test.IntegrationTest) ... ok
+test_list_blogs (tests.integration_test.IntegrationTest) ... ok
+test_list_posts (tests.integration_test.IntegrationTest) ... ok
+test_login_logout (tests.integration_test.IntegrationTest) ... ok
+test_retrieve_blogs (tests.integration_test.IntegrationTest) ... ok
+test_retrieve_posts (tests.integration_test.IntegrationTest) ... ok
+test_set_get_current_blog (tests.integration_test.IntegrationTest) ... ok
+test_update_blog (tests.integration_test.IntegrationTest) ... ok
+test_update_post (tests.integration_test.IntegrationTest) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.465s
+
+OK
+
+
+============================================================
+git log --pretty=format:%h\t%an\t%ad\t%s
+============================================================
+2da2194	Aditi Pathare	Fri Nov 21 15:45:09 2025 -0800	added files
+e33dea1	Aditi Pathare	Fri Nov 21 15:42:14 2025 -0800	Added files
+7f19569	Aditi Pathare	Fri Nov 21 15:39:49 2025 -0800	 Rmoved teemp fiels
+b271c5d	Aditi Pathare	Fri Nov 21 15:35:14 2025 -0800	removed tmep files
+1765e9e	Aditi Pathare	Fri Nov 21 00:15:34 2025 -0800	Updated imports in blog.py
+471742e	Aditi Pathare	Fri Nov 21 00:14:34 2025 -0800	 Added Post_dao_pickle.py
+90ec7ff	Aditi Pathare	Fri Nov 21 00:13:22 2025 -0800	Updated Controller,py with autosave
+ed4a043	Aditi Pathare	Fri Nov 21 00:12:20 2025 -0800	Fixed bugs
+b1f80fb	Aditi Pathare	Thu Nov 20 23:53:00 2025 -0800	Fixed err in blog_decoder.py
+ca72f61	Aditi Pathare	Thu Nov 20 23:51:59 2025 -0800	Fixed err in post
+6aa56d7	Aditi Pathare	Thu Nov 20 23:48:30 2025 -0800	Fixed err in post.py
+b866ccf	Armita Darbandi	Tue Nov 18 19:08:17 2025 -0800	updated codes at controller.py and fixed exception errors
+fec1671	Armita Darbandi	Tue Nov 18 16:19:05 2025 -0800	fixed __init__ at controller.py
+35e172d	Armita Darbandi	Tue Nov 18 16:15:15 2025 -0800	fixed __init__ at post_dao_pickle_mock.py
+22ed097	Armita Darbandi	Tue Nov 18 16:08:45 2025 -0800	changed __init__ at post.py
+7f2ee12	Armita Darbandi	Tue Nov 18 15:53:16 2025 -0800	fixed a typo at blog.py __reper__
+7ff6f2c	Armita Darbandi	Tue Nov 18 15:50:41 2025 -0800	fixed a typo at blog.py
+f6624e1	Armita Darbandi	Tue Nov 18 15:45:37 2025 -0800	update controller
+128169b	Armita Darbandi	Tue Nov 18 15:41:16 2025 -0800	made blog_dao_json.py  in dao
+7b66d39	Armita Darbandi	Tue Nov 18 15:39:42 2025 -0800	made blog_decoder.py at dao
+e3e66d3	Armita Darbandi	Tue Nov 18 15:30:31 2025 -0800	made blog_encoder.py at dao
+045e530	Armita Darbandi	Tue Nov 18 15:20:32 2025 -0800	modified blog.py
+855cb38	Armita Darbandi	Mon Nov 17 19:42:46 2025 -0800	created post_dao_pickle_mock.py as temprory mock so i can test my work(blog.py and controller.py) until i get my teammates codes
+6902f25	Armita Darbandi	Mon Nov 17 17:50:05 2025 -0800	Added assignment 4 starter files
+6569553	Armita Darbandi	Fri Nov 7 16:52:56 2025 -0800	 added comments to blog_test.py and the comments for all other files are done
+4118c92	Armita Darbandi	Fri Nov 7 16:45:05 2025 -0800	 added comments to post_test.py
+599e78f	Armita Darbandi	Fri Nov 7 16:38:09 2025 -0800	 added comments to controller.py
+a49c5fb	Armita Darbandi	Fri Nov 7 16:29:06 2025 -0800	 added comments to blog.py
+6057045	Armita Darbandi	Fri Nov 7 16:21:46 2025 -0800	 added comments to post.py
+36c564f	Armita Darbandi	Fri Nov 7 16:10:44 2025 -0800	 changed th imports and fixed them
+ff627e4	Armita Darbandi	Fri Nov 7 15:51:33 2025 -0800	removed cache files
+132e7f4	Aditi Pathare	Fri Nov 7 13:56:11 2025 -0800	Added more tests to blog_test.py
+722819e	Aditi Pathare	Fri Nov 7 01:34:36 2025 -0800	Added blog_test.py, passes all tests with blog_test, post_test and controller_test
+44f4cdf	Aditi Pathare	Thu Nov 6 21:57:41 2025 -0800	Fixed all files. Passes all controller_test.py testsgit add . Finally Done!
+aece1eb	Aditi Pathare	Thu Nov 6 21:15:23 2025 -0800	Fixes Errors
+8b462f0	Aditi Pathare	Thu Nov 6 12:20:08 2025 -0800	Implemented  Controller.py
+19872d8	Armita Darbandi	Wed Nov 5 17:28:15 2025 -0800	ran 6 tests
+54f06b4	Armita Darbandi	Wed Nov 5 17:26:51 2025 -0800	change mock_test.py created to creation
+e0af226	Armita Darbandi	Wed Nov 5 17:21:03 2025 -0800	change created.at and updated to creation and update
+d8a1ec9	Aditi Pathare	Sun Nov 2 20:53:30 2025 -0800	Added func - Story 11- 14
+2df254e	Aditi Pathare	Sun Nov 2 20:26:24 2025 -0800	Added import statement
+72f976a	Aditi Pathare	Sun Nov 2 20:22:47 2025 -0800	added create_post func
+4677ca3	Aditi Pathare	Sun Nov 2 20:22:03 2025 -0800	added update_details
+2776171	Aditi Pathare	Sun Nov 2 20:21:29 2025 -0800	Added eq and str methods
+7c01464	Aditi Pathare	Sun Nov 2 20:20:27 2025 -0800	Added init func in Blog Class
+4edac1b	Aditi Pathare	Sun Nov 2 17:35:51 2025 -0800	added id file
+978107d	Armita Darbandi	Sun Nov 2 16:11:39 2025 -0800	ran 6 tests, result is okay
+bf686b4	Armita Darbandi	Sun Nov 2 16:10:09 2025 -0800	fixeda typo at equal(lower case) at post-test.py
+a720f88	Armita Darbandi	Sun Nov 2 16:06:10 2025 -0800	added an append line to mock_blog.py
+426eb3d	Armita Darbandi	Sun Nov 2 16:01:34 2025 -0800	import Post to mock_blog.py
+1f5d9e5	Armita Darbandi	Sun Nov 2 15:59:24 2025 -0800	added MockBlog to my post_test.py
+82ee9eb	Armita Darbandi	Sun Nov 2 15:53:22 2025 -0800	added integration tests for post and Blog interaction
+506cc94	Armita Darbandi	Sun Nov 2 15:20:44 2025 -0800	made mocks directory and added mock Blog class for testing Post functionality
+b90fccf	Armita Darbandi	Sun Nov 2 14:42:55 2025 -0800	all the 4 tests passed
+72ae5a8	Armita Darbandi	Sun Nov 2 14:42:01 2025 -0800	fixed  typoes at(lowecase t) in post_test.py
+ad14612	Armita Darbandi	Sun Nov 2 14:37:20 2025 -0800	fixed two typoes at post_test.py
+bb2b988	Armita Darbandi	Sun Nov 2 14:35:21 2025 -0800	fixed indent problem at post_trst.py file
+c7b9ae0	Armita Darbandi	Sun Nov 2 14:04:19 2025 -0800	added unit tests for Post class initializaton and string methods
+eb87d5b	Armita Darbandi	Sun Nov 2 13:03:13 2025 -0800	Added equality comparison and string repsentation methods to Post class
+01d728f	Armita Darbandi	Sun Nov 2 12:52:40 2025 -0800	add basic Post class with title, content, and timestamps
+78bae7d	Armita Darbandi	Sun Nov 2 11:24:45 2025 -0800	added ID file
+959d076	Roberto Bittencourt	Tue Oct 21 14:14:13 2025 -0700	Added controller tests and configuration files
+c025491	Roberto Bittencourt	Tue Oct 21 21:08:52 2025 +0000	Initial commit
+
+
+Controller tests:   24/24 points
+Integration tests:  48/48 points
+Commit log:         8/8 points
+Modularization:    10/10 points.
+Documentation:     10/10 points.
